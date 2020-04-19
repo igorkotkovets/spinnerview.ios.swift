@@ -1,4 +1,6 @@
 use_frameworks!
+swift_version = '5.0'
+platform :ios, '10.0'
 
 target 'SpinnerView_Example' do
   pod 'SpinnerView', :path => '../'

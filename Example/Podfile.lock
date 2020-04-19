@@ -1,0 +1,16 @@
+PODS:
+  - SpinnerView (0.1.0)
+
+DEPENDENCIES:
+  - SpinnerView (from `../`)
+
+EXTERNAL SOURCES:
+  SpinnerView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SpinnerView: 66401da8ad2a8b24be9f9deba3ddd1df8c03155a
+
+PODFILE CHECKSUM: 9e6eff5d79941fc06000c2a6743c776c93eb8022
+
+COCOAPODS: 1.8.4
