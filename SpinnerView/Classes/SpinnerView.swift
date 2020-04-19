@@ -117,7 +117,7 @@ import os.log
         prepareLayerForAnimation()
 
         if  animatedLayer.animation(forKey: STROKE_ANIMATION_KEY) == nil {
-            reverseAnimation()
+            forwardAnimation()
         }
 
         if animatedLayer.animation(forKey: ROTATION_ANIMATION_KEY) == nil {
