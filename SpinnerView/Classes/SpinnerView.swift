@@ -23,9 +23,16 @@ import os.log
         }
     }
     @IBInspectable public var animationDuration: CFTimeInterval = 4
-    @IBInspectable public var isAnimating: Bool = true {
-        didSet {
-            if isAnimating {
+
+    private var isAnimatingInternal: Bool = false
+    @IBInspectable public var isAnimating: Bool {
+        get {
+            return isAnimatingInternal
+        }
+        set {
+            isAnimatingInternal = newValue
+            self.animatedLayer.isHidden = !isAnimatingInternal;
+            if isAnimatingInternal {
                 startAnimation()
             }
             else {
@@ -45,10 +52,17 @@ import os.log
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        commonInit()
+
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        commonInit()
+    }
+
+    func commonInit() {
+        layer.isHidden = !isAnimatingInternal
     }
 
     override public class var layerClass: AnyClass {
@@ -103,7 +117,7 @@ import os.log
         prepareLayerForAnimation()
 
         if  animatedLayer.animation(forKey: STROKE_ANIMATION_KEY) == nil {
-            forwardAnimation()
+            reverseAnimation()
         }
 
         if animatedLayer.animation(forKey: ROTATION_ANIMATION_KEY) == nil {
@@ -128,6 +142,7 @@ import os.log
         strokeEnd.isRemovedOnCompletion = false
         strokeEnd.timingFunction = CAMediaTimingFunction(name: .linear)
         CATransaction.setCompletionBlock{ [weak self] in
+            guard self?.isAnimating == true else { return }
             self?.reverseAnimation()
         }
         animatedLayer.add(strokeEnd, forKey: STROKE_ANIMATION_KEY)
@@ -135,6 +150,7 @@ import os.log
     }
 
     fileprivate func rotateAnimation() {
+        CATransaction.begin()
         let rotate = CABasicAnimation(keyPath: "transform.rotation.z")
         rotate.fromValue = 0
         rotate.toValue = 2*CGFloat.pi
@@ -142,6 +158,7 @@ import os.log
         rotate.autoreverses = false
         rotate.duration = animationDuration/4
         animatedLayer.add(rotate, forKey: ROTATION_ANIMATION_KEY)
+        CATransaction.commit()
     }
 
     func reverseAnimation() {
@@ -154,6 +171,7 @@ import os.log
         strokeEnd.isRemovedOnCompletion = false
         strokeEnd.timingFunction = CAMediaTimingFunction(name: .easeIn)
         CATransaction.setCompletionBlock{ [weak self] in
+            guard self?.isAnimating == true else { return }
             self?.forwardAnimation()
         }
         animatedLayer.add(strokeEnd, forKey: STROKE_ANIMATION_KEY)
@@ -163,6 +181,5 @@ import os.log
     func stopAnimation() {
         animatedLayer.removeAnimation(forKey: ROTATION_ANIMATION_KEY)
         animatedLayer.removeAnimation(forKey: STROKE_ANIMATION_KEY)
-        animatedLayer.removeFromSuperlayer()
     }
 }

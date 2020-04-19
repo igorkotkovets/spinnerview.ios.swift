@@ -19,8 +19,12 @@ class ViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        spinner.isAnimating = true
+//        spinner.isAnimating = true
 
+    }
+
+    @IBAction func didToggleAnimating(_ switchControl: UISwitch) {
+        spinner.isAnimating = switchControl.isOn
     }
 
     override func didReceiveMemoryWarning() {
