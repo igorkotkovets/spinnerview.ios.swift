@@ -7,12 +7,20 @@
 //
 
 import UIKit
+import SpinnerView
 
 class ViewController: UIViewController {
+    @IBOutlet private var spinner: SpinnerView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        spinner.isAnimating = true
+
     }
 
     override func didReceiveMemoryWarning() {

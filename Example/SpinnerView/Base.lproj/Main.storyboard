@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kCL-UC-RGE" customClass="SpinnerView" customModule="SpinnerView">
-                                <rect key="frame" x="127.5" y="273.5" width="120" height="120"/>
+                                <rect key="frame" x="127.5" y="50" width="120" height="120"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="Gd7-Zd-vXs"/>
@@ -33,16 +33,18 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
                                         <real key="value" value="4"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="kCL-UC-RGE" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="0Jw-5j-JC1"/>
-                            <constraint firstItem="kCL-UC-RGE" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="FUz-4m-mU4"/>
+                            <constraint firstItem="kCL-UC-RGE" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="50" id="svj-y6-bAb"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="spinner" destination="kCL-UC-RGE" id="PdS-Mm-q4l"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

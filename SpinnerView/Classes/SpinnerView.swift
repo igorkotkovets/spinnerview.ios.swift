@@ -13,7 +13,7 @@ import os.log
 
     @IBInspectable dynamic public var lineColor: UIColor = UIColor.red {
         didSet {
-            animatingLayer.strokeColor = lineColor.cgColor
+            animatedLayer.strokeColor = lineColor.cgColor
         }
     }
 
@@ -33,7 +33,7 @@ import os.log
             }
         }
     }
-    let animatingLayer = CAShapeLayer()
+
     var angleRad: CGFloat = (330*2*CGFloat.pi/360)
     var angleDegree: CGFloat = 330 {
         didSet {
@@ -66,7 +66,13 @@ import os.log
     }
 
     override public func prepareForInterfaceBuilder() {
-        animatingLayer.path = UIBezierPath(ovalIn: circleFrame).cgPath
+        animatedLayer.path = UIBezierPath(ovalIn: circleFrame).cgPath
+        updateLayerPosition()
+        prepareLayerForAnimation()
+    }
+
+    var animatedLayer: CAShapeLayer {
+        return layer as! CAShapeLayer
     }
 
     var circleFrame: CGRect {
@@ -74,7 +80,6 @@ import os.log
     }
 
     func updateLayerPosition() {
-        animatingLayer.frame = bounds
         let radius = (bounds.size.width-lineWidth)/2
         let center = CGPoint(x: bounds.width/2, y: bounds.height/2)
         let path = UIBezierPath(arcCenter: center,
@@ -82,7 +87,7 @@ import os.log
                                 startAngle: 0,
                                 endAngle: angleRad,
                                 clockwise: true)
-        animatingLayer.path = path.cgPath
+        animatedLayer.path = path.cgPath
     }
 
     func updateAnimationState() {
@@ -97,21 +102,20 @@ import os.log
     func startAnimation() {
         prepareLayerForAnimation()
 
-        if  animatingLayer.animation(forKey: STROKE_ANIMATION_KEY) == nil {
+        if  animatedLayer.animation(forKey: STROKE_ANIMATION_KEY) == nil {
             forwardAnimation()
         }
 
-        if animatingLayer.animation(forKey: ROTATION_ANIMATION_KEY) == nil {
+        if animatedLayer.animation(forKey: ROTATION_ANIMATION_KEY) == nil {
             rotateAnimation()
         }
     }
 
     private func prepareLayerForAnimation() {
-        animatingLayer.fillColor = UIColor.clear.cgColor
-        animatingLayer.strokeStart = 0
-        animatingLayer.strokeColor = lineColor.cgColor
-        animatingLayer.lineWidth = lineWidth
-        layer.addSublayer(animatingLayer)
+        animatedLayer.fillColor = UIColor.clear.cgColor
+        animatedLayer.strokeStart = 0
+        animatedLayer.strokeColor = lineColor.cgColor
+        animatedLayer.lineWidth = lineWidth
     }
 
     func forwardAnimation() {
@@ -126,7 +130,7 @@ import os.log
         CATransaction.setCompletionBlock{ [weak self] in
             self?.reverseAnimation()
         }
-        animatingLayer.add(strokeEnd, forKey: STROKE_ANIMATION_KEY)
+        animatedLayer.add(strokeEnd, forKey: STROKE_ANIMATION_KEY)
         CATransaction.commit()
     }
 
@@ -137,13 +141,13 @@ import os.log
         rotate.repeatCount = MAXFLOAT
         rotate.autoreverses = false
         rotate.duration = animationDuration/4
-        animatingLayer.add(rotate, forKey: ROTATION_ANIMATION_KEY)
+        animatedLayer.add(rotate, forKey: ROTATION_ANIMATION_KEY)
     }
 
     func reverseAnimation() {
         CATransaction.begin()
         let strokeEnd = CABasicAnimation(keyPath: "strokeEnd")
-        strokeEnd.fromValue = animatingLayer.presentation()?.strokeEnd
+        strokeEnd.fromValue = animatedLayer.presentation()?.strokeEnd
         strokeEnd.toValue = 0
         strokeEnd.duration = animationDuration/2
         strokeEnd.fillMode = .forwards
@@ -152,13 +156,13 @@ import os.log
         CATransaction.setCompletionBlock{ [weak self] in
             self?.forwardAnimation()
         }
-        animatingLayer.add(strokeEnd, forKey: STROKE_ANIMATION_KEY)
+        animatedLayer.add(strokeEnd, forKey: STROKE_ANIMATION_KEY)
         CATransaction.commit()
     }
 
     func stopAnimation() {
-        animatingLayer.removeAnimation(forKey: ROTATION_ANIMATION_KEY)
-        animatingLayer.removeAnimation(forKey: STROKE_ANIMATION_KEY)
-        animatingLayer.removeFromSuperlayer()
+        animatedLayer.removeAnimation(forKey: ROTATION_ANIMATION_KEY)
+        animatedLayer.removeAnimation(forKey: STROKE_ANIMATION_KEY)
+        animatedLayer.removeFromSuperlayer()
     }
 }
